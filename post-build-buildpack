@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+
+PLUGIN_BASE_PATH="$PLUGIN_PATH"
+if [[ -n $DOKKU_API_VERSION ]]; then
+  PLUGIN_BASE_PATH="$PLUGIN_ENABLED_PATH"
+fi
+source "$PLUGIN_BASE_PATH/common/functions"
+source "$PLUGIN_BASE_PATH/config/functions"
+
+APP="$1"; IMAGE="dokku/$APP"
+ENABLED=$(config_get "$APP" "DOKKU_DISCOURSE") || true
+[[ $ENABLED != "true" ]] && exit 0
+CID_FILE=$(mktemp -u)
+docker run -i --cidfile "$CID_FILE" -v "$DOKKU_ROOT/$APP:/git" "$IMAGE" bash -s < "$(dirname "$0")/scripts/discourse.sh"
+CID=$(< "$CID_FILE")
+docker commit "$CID" "$IMAGE" > /dev/null
+rm "$CID_FILE"
+exit 0
