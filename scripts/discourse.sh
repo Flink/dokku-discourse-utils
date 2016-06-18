@@ -4,7 +4,7 @@ echo "-----> Installing PostgreSQL tools"
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - > /dev/null
 echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 apt-get update -qq
-apt-get install -qq -y postgresql-client-9.4 &> /dev/null
+apt-get install -qq -y postgresql-client-9.5 &> /dev/null
 
 echo "-----> Installing image optimization tools"
 apt-get install -qq -y gifsicle ImageMagick pngquant jhead jpegoptim libjpeg-turbo-progs libjpeg-progs &> /dev/null
